@@ -1,4 +1,5 @@
 import 'package:apprental/screens/components/CardMenu.dart';
+import 'package:apprental/screens/services/ApiServices.dart';
 import 'package:division/division.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,13 @@ class _HomePageState extends State<HomePage> {
     ..margin(bottom: 20)
     ..alignment.centerLeft()
     ..fontSize(32);
-  
+
+  @override
+  void initState() {
+    super.initState();
+    ApiServices().getData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,9 +53,11 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 height: 20,
               ),
-              Txt("Cars" , style: titleStyle,),
+              Txt(
+                "Cars",
+                style: titleStyle,
+              ),
               _Buildmobil(),
-              
             ],
           ),
           style: contentStyle(context),
@@ -57,94 +66,75 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-//Widget Mobil 
+
+//Widget Mobil
 class _Buildmobil extends StatelessWidget {
-  const _Buildmobil({Key key,}) : super(key: key);
+  const _Buildmobil({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      flex: 1,
-      child: ListView(
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[
-           Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Text(
-                  "Daihatsu",
-                  style: TextStyle(color: Colors.white),
-                )
-              ],
-            ),
-            width: 200,
-            height: 300,
-            margin: EdgeInsets.only(left: 20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
-              color: Colors.amber,
-              image: DecorationImage(
-                  image: new NetworkImage(
-                      "https://irent.id/uploads/thumb/cars/gambar5.jpeg"),
-                  fit: BoxFit.fill),
-            ),
-          ),
-           Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Text(
-                  "Daihatsu",
-                  style: TextStyle(color: Colors.white),
-                )
-              ],
-            ),
-            width: 200,
-            height: 300,
-            margin: EdgeInsets.only(left: 20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
-              color: Colors.amber,
-              image: DecorationImage(
-                  image: new NetworkImage(
-                      "https://irent.id/uploads/thumb/cars/mobil1.jpeg"),
-                  fit: BoxFit.fill),
-            ),
-            
-          ),
-            Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Text(
-                  "Daihatsu",
-                  style: TextStyle(color: Colors.white),
-                )
-              ],
-            ),
-            width: 200,
-            height: 300,
-            margin: EdgeInsets.only(left: 20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
-              color: Colors.amber,
-              image: DecorationImage(
-                  image: new NetworkImage(
-                      "https://irent.id/uploads/thumb/cars/mobil2.jpeg"),
-                  fit: BoxFit.fill),
-            ),
-            
-          ),
-        ],
-      ),
-    );
+        flex: 1,
+        child: FutureBuilder(
+          future: ApiServices().getData(),
+          builder: (BuildContext context, AsyncSnapshot snap) {
+            if (snap.hasData) {
+              return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: snap.data.length,
+                itemBuilder: (context, int index) {
+                  return InkWell(
+                    child: Container(
+                      margin: EdgeInsets.only(left: 20.0),
+                      width: 200,
+                      height: 300,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: new NetworkImage(
+                                  "https://irent.id/uploads/thumb/cars/" +
+                                      snap.data[index]["gambar"]),
+                              fit: BoxFit.fill),
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Text(
+                            snap.data[index]["jenis"].toString(),
+                            style: TextStyle(fontSize: 20, color: Colors.white),
+                          ),
+                          Text(
+                            snap.data[index]["plat_polisi"].toString(),
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: (){
+                      print(snap.data[index]["car_id"]);
+                    },
+                  );
+                },
+              );
+
+              /// Cek Jika Data Masi Di load
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ));
   }
 }
-///Widget Build Parawisiata 
+
+///Widget Build Parawisiata
 class _BuildParawisata extends StatelessWidget {
-  const _BuildParawisata({ Key key,}) : super(key: key);
+  const _BuildParawisata({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
