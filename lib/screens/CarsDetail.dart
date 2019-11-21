@@ -4,7 +4,7 @@ class DetailCars extends StatelessWidget {
   final data;
 
   DetailCars({Key key, @required this.data}) : super(key: key);
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,6 +90,7 @@ class DetailCars extends StatelessWidget {
           ))
         ],
       ),
+      
       floatingActionButton: FloatingActionButton(
         elevation: 10.0,
         splashColor: Colors.white,
