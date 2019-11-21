@@ -1,3 +1,4 @@
+import 'package:apprental/screens/CarsDetail.dart';
 import 'package:apprental/screens/components/CardMenu.dart';
 import 'package:apprental/screens/services/ApiServices.dart';
 import 'package:division/division.dart';
@@ -112,8 +113,13 @@ class _Buildmobil extends StatelessWidget {
                         ],
                       ),
                     ),
-                    onTap: (){
-                      print(snap.data[index]["car_id"]);
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => DetailCars(
+                                    data: snap.data[index],
+                                  )));
                     },
                   );
                 },
